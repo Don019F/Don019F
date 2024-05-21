@@ -1,8 +1,7 @@
 Boas vindas ao meu perfil
 Eu sou o Gustavo, vulgo Don
 meu insta é @_Don029
-sou poeta e MC de batalha de rima
-meu tiktok é @_Don019_
+sou poeta e MC de batalha de rima_
 
 Estou estudando na Alura
 Estou me desenvolvendo na linguagem JavaScript
