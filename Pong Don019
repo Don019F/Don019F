@@ -1,0 +1,148 @@
+//ball variables
+
+let xBall = 300;
+let yBall = 200;
+let dBall = 20;
+let rBall = dBall / 2;
+
+let speedXBall = 6;
+let speedYBall = 6;
+
+//racketP1 variables
+
+let xRacketP1 = 5;
+let yRacketP1 = 150;
+let lRacket = 10;
+let hRacket = 90;
+
+let collideRacket = false
+
+//RacketP2 variables
+let xRacketP2 = 585;
+let yRacketP2 = 150;
+let speedYRacketP2;
+
+let chanceDeErrar = 0;
+
+//scoreboard
+let scoreP1 = 0;
+let scoreP2 = 0;
+
+//sounds
+let raquetada;
+let pont;
+let trilha;
+
+function preload(){
+  trilha = loadSound("trilha.mp3")
+  ponto = loadSound("ponto.mp3")
+  raquetada = loadSound("raquetada.mp3")
+}
+
+function setup() {
+  createCanvas (600, 400)
+  trilha.loop();
+}
+function draw() {
+    background(0);
+    viewBall();
+    ballSpeed();
+    ballCollision();
+    viewRacket(xRacketP1, yRacketP1);
+    racketP1Moviment();
+    racketCollisionLibrary(xRacketP1, yRacketP1);
+    viewRacket(xRacketP2, yRacketP2);
+    racketAiMovement();
+    calculaChanceDeErrar();
+    racketP2Movement();
+    racketCollisionLibrary(xRacketP2, yRacketP2);
+    scoreboard();
+    score();
+
+}
+function viewBall(){
+  circle(xBall, yBall, dBall);
+}
+
+function ballSpeed(){
+  xBall += speedXBall;
+  yBall += speedYBall;
+}
+
+function ballCollision(){
+  if (xBall + rBall > width || 
+     xBall - rBall< 0){
+      speedXBall *= -1;
+    }
+  if (yBall + rBall > height ||
+      yBall - rBall < 0){
+      speedYBall *= -1;
+    }
+}
+
+function viewRacket(x, y){
+  rect(x, y, lRacket, hRacket)
+}
+
+function racketP1Moviment(){
+    if (keyIsDown(UP_ARROW) === true){
+      yRacketP1 -= 10;
+    }
+    if (keyIsDown(DOWN_ARROW) === true){
+      yRacketP1 += 10;
+    }
+}
+function racketCollisionLibrary(x, y){
+  collideRacket = collideRectCircle(x, y, lRacket, hRacket, xBall, yBall, rBall);
+  if (collideRacket){
+    speedXBall *= -1;
+    raquetada.play();
+  }
+}
+function racketAiMovement(){
+  speedYRacketP2 = yBall -yRacketP2 - lRacket / 2 - 30;
+  yRacketP2 += speedYRacketP2 + chanceDeErrar
+  calculaChanceDeErrar()
+}
+function calculaChanceDeErrar() {
+  if (scoreP2 >= scoreP1) {
+    chanceDeErrar += 1
+    if (chanceDeErrar >= 39){
+    chanceDeErrar = 40
+    }
+  } else {
+    chanceDeErrar -= 1
+    if (chanceDeErrar <= 35){
+    chanceDeErrar = 35
+    }
+  }
+}
+function racketP2Movement(){
+   if (keyIsDown(87) === true){
+      yRacketP2 -= 10;
+    }
+    if (keyIsDown(83) === true){
+      yRacketP2 += 10;
+    }
+}
+function scoreboard(){
+  textAlign(CENTER);
+  stroke(255);
+  fill(color(255, 140, 0));
+  rect(150, 10, 40, 20);
+  rect(450, 10, 40, 20);
+  fill(255);
+  textSize(16);
+  text(scoreP1, 170, 26);
+  text(scoreP2, 470, 26);
+}
+function score(){
+  if (xBall > 590){
+      scoreP1 += 1;
+    ponto.play();
+  }
+  if (xBall < 10){
+    scoreP2 += 1
+    ponto.play();
+  }
+}
